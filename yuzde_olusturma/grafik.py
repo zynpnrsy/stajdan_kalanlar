@@ -1,0 +1,32 @@
+#HİZMET ADLARINA GÖRE ^ÇALIŞTI
+
+import pandas as pd
+import plotly.express as px
+
+
+df = pd.read_excel("Book10.xlsx")
+
+#  metrik
+metrikler = ['APPDYNAMICS_SAYISI', 'INSTANA_SAYISI', 'ATERNITY_SAYISI']
+
+
+for metrik in metrikler:
+    # Grup ve say
+    grouped = df.groupby(['Hizmet Adı', 'Sunucu_Fonksiyonu'])[metrik].sum().reset_index()
+
+    # Grafik başlığı 
+    baslik = metrik.replace('_AJAN SAYILARI', '')
+
+    # Grafik oluştur
+    fig = px.bar(
+        grouped,
+        x='Hizmet Adı',
+        y=metrik,
+        color='Sunucu_Fonksiyonu',
+        title=f'{baslik} Kullanımı (Sunucu Fonksiyonu Bazında)',
+        barmode='group',
+        text=metrik
+    )
+
+    fig.update_layout(yaxis_title='Kullanım Sayısı')
+    fig.show()
